@@ -5,6 +5,8 @@ library(shinyWidgets)
 library(scales)
 
 ui <- fluidPage(
+    
+    themeSelector(),
 
 
     titlePanel("Burnout Calculator"),
@@ -18,12 +20,15 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
+            
             HTML("<center>"),
-           autonumericInput("number_of_employees",
+           
+            autonumericInput("number_of_employees",
                         HTML("<b># of Employees</b>"),
                         value = 30,
                         decimalPlaces = 0),
-           autonumericInput("average_salary",
+           
+            autonumericInput("average_salary",
                         HTML("<b>Average Salary</b>"),
                         value = 100000,
                         currencySymbol = "$",
@@ -33,16 +38,21 @@ ui <- fluidPage(
            #              value = 6,
            #              decimalPlaces = 0),
            
-           HTML("<b>% at Risk of Burnout-Related Attrition</b>
+           HTML("<b>20% of Employees are at Risk of Burnout-Related Attrition</b>
                 <br>
                 <small>leaving for an opportunity with better support through benefits,<br>human capital, compensation, or workload</small>
-                <br>
-                <h2>20%</h2>"),
+                <br>"),
            
-           HTML("<b>Cost Per-Employee who Leaves</b>"),
+           HTML("<br>
+                <b># of Employees at Risk of Burnout-Attrition</b>"),
+           textOutput("burnout_employees"),
+           
+           HTML("<br>
+                <b>Cost Per-Employee who Leaves</b>"),
            textOutput("cost_per"),
            
-           HTML("<b>Total Burnout Financial Risk Looming<br>as Shadow Debt on Your Ballance Sheet</b>"),
+           HTML("<br>
+                <b>Total Burnout Financial Risk Looming<br>as Shadow Debt on Your Ballance Sheet</b>"),
            textOutput("total_cost"),
            
            HTML("<center>"),
@@ -57,6 +67,10 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
+    output$burnout_employees <- renderText({
+        x = round(input$number_of_employees * .2)
+    })
+    
     output$cost_per <- renderText({
         dollar(x = input$average_salary/2)
     })
